@@ -5,7 +5,7 @@ if(!fixture)throw Error('Set PRICE_FIXTURE to the original 02.11.2026 PDF');
 (async()=>{const server=http.createServer((req,res)=>{const file=path.join(root,req.url==='/'?'index.html':req.url.split('?')[0]);fs.readFile(file,(e,data)=>{res.statusCode=e?404:200;res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.png')?'image/png':'text/html');res.end(e?'Missing':data);});}).listen(0,'127.0.0.1');await new Promise(r=>server.on('listening',r));
 const url=process.env.TEST_URL||`http://127.0.0.1:${server.address().port}`;const browser=await chromium.launch({channel:'chrome',headless:false});const results=[];
 try{for(const width of [1440,390,375,320]){const context=await browser.newContext({viewport:{width,height:900},permissions:['clipboard-read','clipboard-write']});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});await page.goto(url);
-const fill=async(id,value)=>page.locator('#'+id).fill(String(value));const eq=async(id,value)=>assert.equal(await page.locator('#'+id).inputValue(),String(value));const offer=async(value)=>assert.equal(await page.locator('#offer').innerText(),value+' €');
+const fill=async(id,value)=>page.locator('#'+id).fill(String(value));const eq=async(id,value)=>assert.equal(await page.locator('#'+id).inputValue(),id==='purchase'&&value!==''?Number(value).toFixed(2):String(value));const offer=async(value)=>assert.equal(await page.locator('#offer').innerText(),value+' €');
 assert(await page.locator('#copy').isDisabled());assert.equal(await page.locator('#offer').innerText(),'–');
 await page.locator('#photo').setInputFiles(fixture);await page.waitForFunction(()=>!document.querySelector('#readPrices').disabled,{timeout:120000});assert.match(await page.locator('#ocrState').innerText(),/144 Preispositionen/);
 await fill('product','Rapsschrott');await page.locator('#port').selectOption('Hamburg');await fill('period','November 2026');await eq('purchase',315);await eq('freight',30);await offer('34,90');
@@ -31,7 +31,7 @@ const chooser=page.waitForEvent('filechooser');await page.locator('#cameraButton
 await page.locator('#photo').setInputFiles(fixture);await page.waitForFunction(()=>!document.querySelector('#readPrices').disabled,{timeout:120000});await eq('purchase',314);
 // Contract periods: inclusive calendar-day weights across month/year boundaries.
 await page.locator('#port').selectOption('Hamburg');await fill('product','Rapsschrot');await page.locator('#origin').selectOption('Hamburg');
-await fill('dateFrom','2026-11-20');await fill('dateTo','2026-12-10');assert(Math.abs(Number(await page.locator('#purchase').inputValue())-(11*315+10*305)/21)<1e-10);assert.match(await page.locator('#dateBreakdown').innerText(),/11 Tage.*10 Tage/);
+await fill('dateFrom','2026-11-20');await fill('dateTo','2026-12-10');await eq('purchase',310.24);assert(Math.abs(await page.evaluate(()=>exactPurchase)-(11*315+10*305)/21)<1e-10);assert.match(await page.locator('#dateBreakdown').innerText(),/11 Tage.*10 Tage/);
 await fill('dateFrom','2026-12-31');await fill('dateTo','2027-01-01');await eq('purchase',302.5);
 await fill('dateFrom','2026-12-15');await fill('dateTo','2026-12-15');await eq('purchase',305);
 await page.locator('#port').selectOption('Brake');await page.locator('#origin').selectOption('Schrot! Brake/Bremen/Oldenbg');await fill('dateFrom','2026-12-01');await fill('dateTo','2027-01-31');await eq('purchase',311.5);
