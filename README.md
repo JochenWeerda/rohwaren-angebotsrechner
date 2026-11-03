@@ -28,3 +28,20 @@ node tests/workflow.cjs
 Optional `TEST_URL` für dieselben Prüfungen gegen GitHub Pages. Tests verwenden das tatsächliche PDF außerhalb des Repos; es wird nicht veröffentlicht. Sie öffnen Chrome, laden das PDF per Dateieingabe und prüfen Preiswechsel, Tippfehler, Zuschläge, Grenzen, erneuten Upload, Zwischenablage, abgefangenes Teilen, Kamera-Dateiauswahl und Tagesgewichtung bei 1440/390/375/320 px. Kein Kundenangebot wird versandt. Die Datumsfälle beziehen sich auf den Prüfstand 03.11.2026.
 
 Deployment: Push auf `main` startet `.github/workflows/pages.yml`.
+
+## Gmail-Original-PDF
+
+„Mit Google anmelden & Preisblatt laden“ verwendet die öffentliche OAuth-Web-Client-ID und ausschließlich `gmail.readonly`. Der Browser sucht mit `in:trash from:email@mpaschelke.de has:attachment filename:pdf subject:"Preisliste vom"` und `includeSpamTrash=true`. Absender und Betreff werden nach dem Abruf nochmals geprüft. Der neueste Preisblatt-Betreff bestimmt die Auswahl, nicht eine feste Uhrzeit. Verschachtelte MIME-Teile werden unterstützt. Mails/Anhänge werden weder gelöscht noch verschoben, markiert oder weitergeleitet. Das PDF wird direkt an den vorhandenen lokalen Parser übergeben.
+
+Die Berechtigung `gmail.readonly` erlaubt technisch das Lesen des Postfachs; Google bietet keinen auf genau diese Suchabfrage begrenzten OAuth-Scope. Der Anwendungscode verwendet sie nur für den Preisblattabruf. Zugangstoken bleiben ausschließlich im Arbeitsspeicher, nicht in localStorage, sessionStorage oder im Repository. Beim Neuladen/Schließen oder nach Tokenablauf ist erneut eine Nutzeraktion für die Google-Anmeldung erforderlich. Es gibt keinen unbeaufsichtigten Hintergrundjob. Nach Rückkehr in eine noch angemeldete App wird frühestens nach fünf Minuten erneut geprüft. Ein neues PDF ersetzt eine bestehende Kalkulation nur nach Bestätigung.
+
+Google-Projekt für diese Client-ID vorbereiten:
+- OAuth-Clienttyp Webanwendung.
+- Autorisierte JavaScript-Herkunft: `https://jochenweerda.github.io` (ohne Repository-Pfad).
+- Gmail API aktivieren.
+- OAuth-Zustimmungsbildschirm mit `https://www.googleapis.com/auth/gmail.readonly` konfigurieren. Bei Testbetrieb das verwendete Gmail-Konto als Testnutzer aufnehmen.
+- Der Nutzer meldet sich selbst an und bestätigt Googles Lese-Freigabe. Kein Client-Secret wird in der Browser-App verwendet.
+
+`node tests/gmail.cjs` prüft mit PRICE_FIXTURE den Browserimport. OAuth und Gmail-API werden dort ausdrücklich nachgebildet, das PDF und dessen Parser sind echt. Dies ersetzt keinen erfolgreichen Kontozugriff durch Google OAuth.
+
+Quellen: https://developers.google.com/identity/oauth2/web/guides/use-token-model und https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list
