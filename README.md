@@ -47,3 +47,5 @@ Google-Projekt für diese Client-ID vorbereiten:
 Quellen: https://developers.google.com/identity/oauth2/web/guides/use-token-model und https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list
 
 Gmail-Abruf begrenzt auf die letzten 45 Tage und maximal 100 passende Mails. Einzelne Anfragen werden nach 20 Sekunden abgebrochen. Metadaten werden in Gruppen von maximal fünf Mails mit sichtbarem Fortschritt gelesen. Google-Quotenfehler erhalten einen Hinweis zum späteren Wiederholen; es erfolgt keine automatische Wiederholungsschleife.
+
+Anlieferarten: Muldenkipper gekippt ohne Zuschlag; Schubboden +4 €/t; Muldenkipper mit Gebläse frei Silo +5 €/t. Das Gebläse gehört zum Muldenkipper. Die frühere Kombination Schubboden/Gebläse (+9 €/t) wurde entfernt. Der Angebotstext übernimmt die genaue gewählte Anlieferart.

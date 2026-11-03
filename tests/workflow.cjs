@@ -15,13 +15,13 @@ await fill('period','Januar 2027');await eq('purchase',309);await offer('32,80')
 await fill('period','1/27');await eq('purchase',309);
 await fill('period','unbekannt');await eq('purchase','');assert(await page.locator('#copy').isDisabled());
 await fill('period','12');await eq('purchase',314);
-await page.locator('#delivery').selectOption('slide');await offer('33,70');await page.locator('#delivery').selectOption('blown');await offer('33,80');await page.locator('#delivery').selectOption('slideblown');await offer('34,20');
-await page.locator('#marginType').selectOption('partial');await eq('margin',10);await fill('tons',10);await offer('34,80');await page.locator('#mix').check();await offer('37,60');await page.locator('#eudr').check();await offer('40,10');
-await fill('other',2);await offer('40,30');await fill('margin',7);await eq('marginType','custom');await offer('40,00');
+await page.locator('#delivery').selectOption('slide');await offer('33,70');await page.locator('#delivery').selectOption('blown');await offer('33,80');assert.equal(await page.locator('#delivery option').count(),3);assert.match(await page.locator('#delivery option:checked').innerText(),/Muldenkipper mit Gebläse/);
+await page.locator('#marginType').selectOption('partial');await eq('margin',10);await fill('tons',10);await offer('34,40');await page.locator('#mix').check();await offer('37,20');await page.locator('#eudr').check();await offer('39,70');
+await fill('other',2);await offer('39,90');await fill('margin',7);await eq('marginType','custom');await offer('39,60');
 for(const [id,v] of [['tons',0],['purchase',-1],['freight',-1],['margin',-1]]){const old=await page.locator('#'+id).inputValue();await fill(id,v);assert.equal(await page.locator('#offer').innerText(),'–');await fill(id,old);}
-await page.locator('#route').selectOption('direct');await eq('freight','');assert(await page.locator('#copy').isDisabled());await fill('freight',42);await offer('42,70');
-await fill('purchase',320);assert.match(await page.locator('#priceSource').innerText(),/Manuelle Korrektur/);await offer('43,30');
-await fill('client','Testkunde');await page.locator('#message').fill((await page.locator('#message').inputValue())+'\nIndividuelle Ergänzung');await page.locator('#checked').check();assert.match(await page.locator('#message').inputValue(),/Individuelle Ergänzung/);await page.locator('#copy').click();assert.match(await page.evaluate(()=>navigator.clipboard.readText()),/43,30.*\/dt netto/);
+await page.locator('#route').selectOption('direct');await eq('freight','');assert(await page.locator('#copy').isDisabled());await fill('freight',42);await offer('42,30');
+await fill('purchase',320);assert.match(await page.locator('#priceSource').innerText(),/Manuelle Korrektur/);await offer('42,90');
+await fill('client','Testkunde');await page.locator('#message').fill((await page.locator('#message').inputValue())+'\nIndividuelle Ergänzung');await page.locator('#checked').check();assert.match(await page.locator('#message').inputValue(),/Individuelle Ergänzung/);await page.locator('#copy').click();assert.match(await page.evaluate(()=>navigator.clipboard.readText()),/42,90.*\/dt netto/);
 // Intercept external share to check payload without sending a customer message.
 await page.evaluate(()=>{window.testShared=null;Object.defineProperty(navigator,'share',{configurable:true,value:async data=>{window.testShared=data.text;}})});await page.locator('#share').click();assert.match(await page.evaluate(()=>window.testShared),/Individuelle Ergänzung/);
 await page.evaluate(()=>Object.defineProperty(navigator,'share',{configurable:true,value:undefined}));await page.evaluate(()=>{window.testURL='';window.open=(u)=>{window.testURL=u;return {};}});await page.locator('#share').click();assert.match(await page.evaluate(()=>window.testURL),/^https:\/\/wa.me\/\?text=/);
