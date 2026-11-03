@@ -65,3 +65,11 @@ Prüfbeispiel: Rapsschrot Hamburg, 03.11.2026–31.07.2027, alle 28 Tage je 25 t
 ## Rohwarenmenü
 
 Erkannte Rohware/Herkunft wird als vollständige, umbrochene Schaltfläche im Menü angeboten. Standardmäßig sind nur Positionen mit Brake oder Hamburg in der Herkunft zugelassen. „Erweiterte Auswahl“ öffnet alle erkannten Positionen und die Hafenoption Andere. Die Auswahl setzt Rohware und genaue Herkunft gemeinsam; die Preisfilter verwenden exakte Produktzuordnung. Beim Zurückschalten wird eine nicht mehr zugelassene Auswahl einschließlich Einkauf gelöscht. NON GMO und Proteingehalte werden ausschließlich aus dem erkannten Originalnamen übernommen und vollständig angezeigt. Ein separater manueller Fallback bleibt für nicht erkannte Zeilen verfügbar.
+
+## Beginn/Ende und automatische Einkaufsübernahme
+
+Beginn und Ende können in getrennten Monatsmenüs ausgewählt werden. Beginn = Monatserster, frühestens heute; Ende = Monatsletzter, begrenzt durch das Preisblatt. Die Datumsfelder bleiben zusätzlich für Kalenderauswahl und direkte Eingabe verfügbar. „Lieferzeitraum“ ist eine schreibgeschützte Zusammenfassung und keine konkurrierende Freitexteingabe mehr.
+
+Wurde noch kein Datum bewusst gewählt, setzt die Rohwarenauswahl den ersten verfügbaren datierbaren Preiszeitraum ein und kennzeichnet dies sichtbar. Bewusst gewählte Termine werden beim Warenwechsel nicht überschrieben. Fehlende oder mehrdeutige Preise bleiben gesperrt. Input- und Change-Ereignisse aktualisieren die Berechnung; „Jetzt kalkulieren“ berechnet zusätzlich ausdrücklich neu und meldet Ergebnis oder fehlende Angaben. Manuelle Einkaufskorrekturen werden durch diesen Knopf nicht wieder durch einen automatischen Tabellenpreis ersetzt.
+
+Zusätzlich geprüft: Playwright-WebKit mit iPhone-13-Emulation (kein physisches iPhone), automatische November-/Dezemberpreise, Monatsspanne November–Juli, direkt eingegebene Termine, Change-Ereignis ohne Input-Ereignis, Kalkulieren-Knopf, Erhalt manueller Einkaufskorrekturen, ungültige Datumsreihenfolge und keine zusätzlichen Rundungsfehler. Test: tests/webkit-iphone.cjs mit PRICE_FIXTURE und installierter Playwright-WebKit-Engine.
