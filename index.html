@@ -3,7 +3,7 @@
 </style><style>
 #ocrState{white-space:pre-wrap}#ocrChoices{max-height:340px;overflow:auto;border:1px solid #d0ddce;border-radius:8px;margin:8px 0}.ocrRow{padding:10px;border-bottom:1px solid #e6ece4;display:flex;gap:8px;align-items:flex-start}.ocrRow button{width:auto;min-width:95px;margin:0;padding:7px;font-size:13px}.ocrRow div{font-size:12px;overflow-wrap:anywhere}.ocrWarn{background:#fff3d9;color:#674b00;border-radius:8px;padding:10px;font-size:13px}
 </style></head><body><header><div><small>HINRICH FOLKERTS LANDHANDEL</small><h1>Rohwaren-Angebotsrechner</h1><div>Hafenlager Brake / Hamburg · WhatsApp-Angebot</div></div></header><main>
-<section><h2>1 · Preisblatt öffnen</h2><p class="hint">Foto oder Screenshot auswählen. Das Bild bleibt auf deinem Gerät und kann vergrößert werden. Das Preisblatt wird auf deinem Gerät ausgelesen. Wähle einen erkannten Preis aus und bestätige Rohware, Liefertermin und Herkunft vor der Kalkulation. Die Erkennung kann bei kleinen Tabellen fehlerhaft sein.</p><input type="file" id="photo" accept="image/*,application/pdf"><img id="preview" class="photo hidden" alt="Hochgeladenes Preisblatt"><div id="pdfnote" class="hint"></div><button id="readPrices">Preise aus Foto / PDF erkennen</button><div id="ocrState" class="hint" role="status"></div><div id="ocrChoices"></div><p class="ocrWarn">⚠️ OCR-Testfunktion: Rohware, Datum, Lieferperiode, Bezugsort und Preis vor dem Versenden immer mit dem Original-Preisblatt vergleichen. Es wird kein Preis ungeprüft in ein Angebot übernommen. Die Erkennung benötigt beim ersten Aufruf eine Internetverbindung zum Laden der Erkennungsbibliothek.</p><button class="ghost" id="example">Beispiel-Preisblatt anzeigen</button></section>
+<section><h2>1 · Preisblatt öffnen</h2><p class="hint">Foto oder Screenshot auswählen. Das Bild bleibt auf deinem Gerät und kann vergrößert werden. Das Preisblatt wird auf deinem Gerät ausgelesen. Wähle einen erkannten Preis aus und bestätige Rohware, Liefertermin und Herkunft vor der Kalkulation. Die Erkennung kann bei kleinen Tabellen fehlerhaft sein.</p><input type="file" id="photo" accept="image/*,application/pdf"><img id="preview" class="photo hidden" alt="Hochgeladenes Preisblatt"><div id="pdfnote" class="hint"></div><button id="readPrices">Preise aus Foto / PDF erkennen</button><div id="ocrState" class="hint" role="status"></div><div id="ocrChoices"></div><div id="pricePickerBlock" class="hidden"><label>Erkannte Preisposition auswählen</label><select id="priceChoice"><option value="">Bitte auswählen</option></select><p class="hint" id="pricePickNote"></p></div><p class="ocrWarn">⚠️ OCR-Testfunktion: Rohware, Datum, Lieferperiode, Bezugsort und Preis vor dem Versenden immer mit dem Original-Preisblatt vergleichen. Es wird kein Preis ungeprüft in ein Angebot übernommen. Die Erkennung benötigt beim ersten Aufruf eine Internetverbindung zum Laden der Erkennungsbibliothek.</p><button class="ghost" id="example">Beispiel-Preisblatt anzeigen</button></section>
 <section><h2>2 · Komponente & Einkaufspreis</h2><label>Rohware</label><input id="product" placeholder="z. B. Sojaschrot MP" placeholder="z. B. Rapsschrot, Sojaschrot MP"><div class="grid"><div><label>Hafen / Ausgangsort</label><select id="port"><option value="Brake">Brake</option><option value="Hamburg">Hamburg</option><option value="Andere">Andere / manuell</option></select></div><div><label>Lieferzeitraum</label><input id="period" placeholder="z. B. 11–1/2027"></div><div><label>Einkauf €/t netto</label><input type="number" id="purchase" value="" placeholder="Preisblattwert eingeben" step="0.01" min="0"></div><div><label>Menge (t)</label><input type="number" id="tons" value="25" step="0.1" min="0.1"></div></div><p class="hint">Einkaufspreise aus den Preisblättern sind hier als €/t angenommen. Achtung: Positionen mit „loko“, „fob“, „fot“, „frei LKW“ oder abweichenden Orten benötigen die passende Lieferbedingung und Frachtprüfung.</p><label class="checkbox"><input id="eudr" type="checkbox"> EUDR-Szenario-Aufschlag +25 €/t berücksichtigen</label><p class="hint">Nur aktivieren, wenn der Zuschlag für die konkrete Ware und den Liefertermin tatsächlich gilt. Die Anmerkung im fotografierten Preisblatt ist eine konditionale Händlerangabe, keine bestätigte Rechtslage.</p></section>
 <section><h2>3 · Logistik & Weiterverarbeitung</h2><div class="grid"><div><label>Transportweg</label><select id="route"><option value="depot">Hafen → Lager Groothusen</option><option value="direct">Direkt zum Kunden (Fracht manuell)</option></select></div><div><label>Fracht €/t</label><input type="number" id="freight" value="15" step="0.5" min="0"></div><div><label>Anlieferung</label><select id="delivery"><option value="tip">Gekippt</option><option value="slide">Schubboden (+4 €/t)</option><option value="blown">Frei Silo geblasen (+5 €/t)</option><option value="slideblown">Schubboden + frei Silo geblasen (+9 €/t)</option></select></div><div><label>Spanne</label><select id="marginType"><option value="full">Volle LKW-Ladung (3–5 €/t)</option><option value="partial">Teilmenge gekippt (10 €/t)</option><option value="custom">Individuell</option></select></div><div><label>Spanne €/t</label><input type="number" id="margin" value="4" step="0.5" min="0"></div><div><label>Weitere Kosten €/t</label><input type="number" id="other" value="0" min="0" step="0.5"></div></div><label class="checkbox"><input type="checkbox" id="mix"> Ware geht über Lager in eine Mehlmischung (Umschlag + MMX)</label><div class="grid"><div><label>Umschlag €/t</label><input type="number" id="handling" value="10" min="0" step="0.5"></div><div><label>Mahl-/Mischlohn (MMX) €/t</label><input type="number" id="mmx" value="18" min="0" step="0.5"></div></div><p class="hint" id="routeNote">Die Hafenfracht ist für den Weg nach Groothusen kalkuliert. Bei anschließender Kundenbelieferung zusätzliche Auslieferfracht eintragen. Bei Direktlieferung den echten Frachtsatz eingeben.</p></section>
 <section><h2>4 · Kalkulation</h2><div class="numbers"><div class="number"><small>Einstand inkl. Fracht & Zuschläge</small><strong id="cost">–</strong></div><div class="number"><small>Kalkulierte Spanne</small><strong id="margOut">–</strong></div></div><div class="total"><small>Angebotspreis netto</small><strong id="offer">–</strong><small>€/dt · zzgl. gesetzlicher MwSt.</small></div><div id="details"></div><p class="hint">1 dt = 100 kg · 1 t = 10 dt · daher €/t ÷ 10 = €/dt. Auf zwei Nachkommastellen gerundet.</p></section>
@@ -68,4 +68,89 @@ finally{btn.disabled=false;btn.textContent='Preise aus Foto / PDF erkennen';}
 $('readPrices').addEventListener('click',readPrices);
 $('photo').addEventListener('change',()=>{selectedFile=$('photo').files?.[0]||null;statusOCR(selectedFile?'Datei ausgewählt. „Preise erkennen“ starten.':'');$('ocrChoices').replaceChildren();});
 $('example').addEventListener('click',()=>{selectedFile=null;statusOCR('Beispiel geöffnet. „Preise erkennen“ starten.');$('ocrChoices').replaceChildren();});
+
+/* Table-aware native PDF price extraction; coordinates keep each period-price pair on its row. */
+let extractedPriceRows=[];
+const looksLikePeriod=s=>/^(?:loko|(?:ab\s+)?\d{1,2}(?:[-/]\d{1,2})?(?:\/\d{2,4})?\*?)$/i.test(s.trim());
+const normalized=s=>(s||'').toLowerCase().normalize('NFKD').replace(/ß/g,'ss').replace(/schrott/g,'schrot').replace(/[^a-z0-9]/g,'');
+function productOnLine(s){const patterns=[/Sojaschalen[- ]?Pellets/i,/Sojaschrot\s*(?:MP|HP)?/i,/Soja\s+NON\s+GMO\s+\d+\s*%\s*(?:ProFett|Protein)/i,/Soja\s+(?:LP|HP)/i,/Rapsschrot/i,/Rapsexpeller/i,/Sonnenblumenschalen[- ]?Pellets/i,/Sonne\s+(?:LP|HP)/i,/T[- ]?Schnitzel/i,/Palmexpeller/i,/Protigrain/i,/Mais\s+europ\./i,/Maisschrot/i,/bras\.\s*Soja[- ]?Pel\./i,/opt\.\s*Soja\s+46/i];for(const p of patterns){const m=s.match(p);if(m)return m[0];}return null;}
+async function parsePdfTable(file){
+ await loadLibrary('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',()=>!!window.pdfjsLib);
+ window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ const doc=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+ const page=await doc.getPage(1);const content=await page.getTextContent();
+ const items=content.items.filter(a=>a.str&&a.str.trim()).map(a=>({x:a.transform[4],y:a.transform[5],s:a.str.trim()})).sort((a,b)=>b.y-a.y||a.x-b.x);
+ const lines=[];for(const item of items){let row=lines.find(r=>Math.abs(r.y-item.y)<2.5);if(!row){row={y:item.y,items:[]};lines.push(row);}row.items.push(item);}
+ lines.sort((a,b)=>b.y-a.y);
+ let product='',seenRapsschrot=false;const output=[];
+ for(const line of lines){
+  const ordered=line.items.sort((a,b)=>a.x-b.x);
+  const joined=ordered.map(a=>a.s).join(' ');
+  const found=productOnLine(joined);if(found){product=found;seenRapsschrot=normalized(found)==='rapsschrot';}
+  if(!product)continue;
+  // Skip heading, charts and numbers not paired to a delivery period.
+  let firstPeriod=ordered.findIndex(a=>looksLikePeriod(a.s));
+  if(firstPeriod<0)continue;
+  let prefix=ordered.filter(a=>a.x<ordered[firstPeriod].x).map(a=>a.s).join(' ');
+  // Handle rows without a repeated product: carry section product forward.
+  let location=prefix.replace(/Sojaschalen[- ]?Pellets|Sojaschrot\s*(?:MP|HP)?|Rapsschrot|Rapsexpeller|Sonnenblumenschalen[- ]?Pellets|Sonne\s+(?:LP|HP)|Palmexpeller|Protigrain|Mais\s+europ\.|Maisschrot|Soja\s+(?:LP|HP)/ig,'').replace(/\b(?:fot|final|frei LKW|Schrot!|Pellets!)\b/ig,'').trim();
+  location=location.replace(/^[-\s:!]+/,'')||'Ort prüfen';
+  // The PDF exporter can split or combine header words. Match actual period/price pairs in x-order.
+  const body=ordered.slice(firstPeriod).map(a=>a.s).join(' ');
+  const pair=/\b(loko|(?:ab\s+)?\d{1,2}(?:[-/]\d{1,2})?(?:\/\d{2,4})?\*?)\s+(\d{3}[,.]\d{2}|a\.A\.)/gi;
+  let m;while((m=pair.exec(body))!==null){
+   const price=normalizePrice(m[2]);if(price===null)continue;
+   output.push({product,location,period:m[1].trim(),price,line:joined.slice(0,230),kind:'PDF-Text'});
+  }
+ }
+ return output;
+}
+function showPriceRows(rows){
+ extractedPriceRows=rows.filter(r=>r.price>0);$('pricePickerBlock').classList.remove('hidden');
+ refreshPriceSelect(false);statusOCR(rows.length+' zugeordnete Preispositionen erkannt. Ware, Hafen und Lieferzeitraum auswählen, dann Einkaufspreis bestätigen.');
+}
+function refreshPriceSelect(auto=true){
+ const product=normalized($('product').value);
+ const port=$('port').value.toLowerCase();
+ const period=normalized($('period').value);
+ const selected=extractedPriceRows.filter(r=>(!product||normalized(r.product).includes(product)||product.includes(normalized(r.product)))&&(!period||normalized(r.period)===period)&&(!port||port==='andere'||r.location.toLowerCase().includes(port)));
+ const sel=$('priceChoice');const old=sel.value;sel.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent='Preisposition auswählen';sel.append(blank);
+ selected.forEach(r=>{const opt=document.createElement('option');opt.value=String(extractedPriceRows.indexOf(r));opt.textContent=r.product+' · '+r.location+' · '+r.period+' · '+r.price.toLocaleString('de-DE',{minimumFractionDigits:2})+' €/t';sel.append(opt);});
+ $('pricePickNote').textContent=selected.length+' passende Preisposition(en). '+(selected.length===0?'Bitte Herkunft, Ware oder Liefermonat anpassen.':'Mit Auswahlliste übernehmen; bei mehreren Terminen keine automatische Preisannahme.');
+ if(!auto)return;
+ if(selected.length===1){sel.value=String(extractedPriceRows.indexOf(selected[0]));applyPriceSelected(true);}
+ else {$('purchase').value='';update();}
+}
+function applyPriceSelected(auto=false){
+ const ix=$('priceChoice').value;if(ix==='')return;const r=extractedPriceRows[+ix];if(!r)return;
+ $('product').value=r.product;$('period').value=r.period;$('purchase').value=String(r.price);
+ if(/\bBrake\b/i.test(r.location)&&!/Hamburg/i.test(r.location))$('port').value='Brake';
+ else if(/\bHamburg\b/i.test(r.location)&&!/Brake/i.test(r.location))$('port').value='Hamburg';
+ else $('port').value='Andere';
+ setF();update();
+ $('pricePickNote').textContent=(auto?'Eindeutiger Treffer automatisch eingesetzt: ':'Preis aus gewählter Tabellenposition übernommen: ')+r.product+' · '+r.location+' · '+r.period+' · '+r.price+' €/t. Vor Versand mit Preisblatt abgleichen.';
+}
+$('priceChoice').addEventListener('change',()=>applyPriceSelected());
+['product','port','period'].forEach(id=>{$(id).addEventListener('input',()=>{if(extractedPriceRows.length)refreshPriceSelect();});$(id).addEventListener('change',()=>{if(extractedPriceRows.length)refreshPriceSelect();});});
+async function improvedRecognition(){
+ const file=selectedFile;const existing=$('preview').src;
+ if(!file&&!existing){statusOCR('Bitte ein Preisblatt hochladen.');return;}
+ const b=$('readPrices');b.disabled=true;b.textContent='Erkennung läuft…';
+ try{
+  if(file&&file.type==='application/pdf'){
+   statusOCR('Lese PDF-Tabellenstruktur und zugehörige Liefertermine…');
+   const rows=await parsePdfTable(file);
+   if(rows.length){$('ocrChoices').replaceChildren();showPriceRows(rows);return;}
+   statusOCR('PDF enthält keine auswertbaren Tabellenpaare. Versuche Bilderkennung…');
+  }
+  await loadLibrary('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js',()=>!!window.Tesseract);
+  const source=file?.type==='application/pdf'?await pdfFirstPageToCanvas(file):file||existing;
+  const res=await window.Tesseract.recognize(source,'deu+eng',{logger:m=>{if(m.status==='recognizing text')statusOCR('Texterkennung '+Math.round(m.progress*100)+' %');}});
+  const candidates=recognizeCandidates(res.data.text||'').map(r=>({...r,period:'Liefertermin prüfen',location:r.location||'Ort prüfen'}));
+  $('ocrChoices').replaceChildren();showPriceRows(candidates);
+  statusOCR('Foto/OCR: Zuordnung von Ort und Termin unsicher! Preisposition manuell auswählen und alle Angaben mit dem Original prüfen.');
+ }catch(e){statusOCR('Lesefehler: '+e.message+'. Preis kann weiterhin manuell eingetragen werden.');}
+ finally{b.disabled=false;b.textContent='Preise aus Foto / PDF erkennen';}
+}
+const oldButton=$('readPrices'),newButton=oldButton.cloneNode(true);oldButton.replaceWith(newButton);newButton.addEventListener('click',improvedRecognition);
 </script></body></html>
