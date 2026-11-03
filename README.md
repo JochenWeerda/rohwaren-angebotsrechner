@@ -45,3 +45,5 @@ Google-Projekt für diese Client-ID vorbereiten:
 `node tests/gmail.cjs` prüft mit PRICE_FIXTURE den Browserimport. OAuth und Gmail-API werden dort ausdrücklich nachgebildet, das PDF und dessen Parser sind echt. Dies ersetzt keinen erfolgreichen Kontozugriff durch Google OAuth.
 
 Quellen: https://developers.google.com/identity/oauth2/web/guides/use-token-model und https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list
+
+Gmail-Abruf begrenzt auf die letzten 45 Tage und maximal 100 passende Mails. Einzelne Anfragen werden nach 20 Sekunden abgebrochen. Metadaten werden in Gruppen von maximal fünf Mails mit sichtbarem Fortschritt gelesen. Google-Quotenfehler erhalten einen Hinweis zum späteren Wiederholen; es erfolgt keine automatische Wiederholungsschleife.
