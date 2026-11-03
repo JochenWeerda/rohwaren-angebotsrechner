@@ -7,7 +7,7 @@ Browser-App für Preisblattimport, Logistik und Nettoangebote in €/dt.
 2. Rohware (auch „Rapsschrott“), Hafen und Lieferperiode wählen. Eindeutige PDF-Positionen aktualisieren den Einkaufspreis. Die genaue Herkunft unterscheidet z. B. Schrot und Pellets.
 3. Für einzelne Liefertage oder Kontrakte „tagesgenau kalkulieren“ aktivieren, genaue Herkunft und Von/Bis wählen. Ein Liefertag hat identische Daten. Mindestdatum ist der heutige lokale Kalendertag, Maximum das Ende der letzten datierbaren Preisperiode für Ware/Herkunft.
 4. Ein Zeitraum über mehrere Perioden berechnet `Summe(Kalendertage × Einkauf €/t) / gesamte Kalendertage`. Beide Grenztage zählen. UTC-Tageszahlen vermeiden Sommerzeitfehler. Preisüberschneidungen und Lücken blockieren die automatische Kalkulation. Gleichmäßige Abnahme pro Tag ist die Rechenannahme.
-5. Fracht, Anlieferung, Teilmenge, Spanne und optional Umschlag/MMX prüfen. Direktlieferung benötigt eine manuelle Fracht. Ein manueller Einkauf ersetzt den Tagesmittelwert.
+5. Fracht, Anlieferung, Teilmenge, Spanne und optional Umschlag/MMX prüfen. Volle 25-t-Ladungen verwenden ab Brake 15 €/t und ab Hamburg 30 €/t, sowohl zum Kunden als auch zum Lager Groothusen. Abweichende Ladungsgrößen benötigen eine separat geprüfte Fracht. Ein manueller Einkauf ersetzt den Tagesmittelwert.
 6. Ergebnis ist `(Einkauf + Kosten + Spanne) / 10` in €/dt netto. Erst nach gültigen Eingaben und Bestätigung ist Kopieren/Teilen möglich. Angebotstext kann angepasst werden; Änderungen der Kalkulation erzeugen den Text neu.
 
 ## Grenzen
@@ -49,3 +49,14 @@ Quellen: https://developers.google.com/identity/oauth2/web/guides/use-token-mode
 Gmail-Abruf begrenzt auf die letzten 45 Tage und maximal 100 passende Mails. Einzelne Anfragen werden nach 20 Sekunden abgebrochen. Metadaten werden in Gruppen von maximal fünf Mails mit sichtbarem Fortschritt gelesen. Google-Quotenfehler erhalten einen Hinweis zum späteren Wiederholen; es erfolgt keine automatische Wiederholungsschleife.
 
 Anlieferarten: Muldenkipper gekippt ohne Zuschlag; Schubboden +4 €/t; Muldenkipper mit Gebläse frei Silo +5 €/t. Das Gebläse gehört zum Muldenkipper. Die frühere Kombination Schubboden/Gebläse (+9 €/t) wurde entfernt. Der Angebotstext übernimmt die genaue gewählte Anlieferart.
+
+
+## Regelmäßige Abnahmen
+
+Im tagesgenauen Kontraktmodus stehen Tagesmittel (bisheriger Modus), Einzellieferung am Startdatum und regelmäßige Abrufe zur Auswahl. Regelmäßige Abrufe beginnen am Von-Datum und wiederholen sich nach ganzen Kalendertagen (Standard 28), solange der Termin einschließlich innerhalb des Bis-Datums liegt. Das Enddatum wird nicht zusätzlich als Lieferung eingefügt.
+
+Die Menge kann je Lieferung oder als Gesamtmenge angegeben werden. Bei Gesamtmenge gilt gleiche Menge je Termin = Gesamtmenge / Anzahl Termine. Der Einkauf ist dann Summe(Liefermenge × Preis am tatsächlichen Termin) / Gesamtmenge. Liefertermine, Einzelmengen, Gesamtmenge und letzter Abruf werden angezeigt und in den Angebotstext übernommen. Bei einem fehlenden/mehrdeutigen Preis an einem Abruftermin bleibt die automatische Kalkulation gesperrt.
+
+Volle 25 t je Abruf: Fracht Brake 15 €/t oder Hamburg 30 €/t, direkt zum Kunden oder zum Lager Folkerts Landhandel, Groothusen. Standardspanne 4 €/t (individuell 3–5 möglich); Teilmengen erhalten 10 €/t Standardspanne. Manuell gewählte Spannen bleiben individuell. Schubboden +4 €/t; Muldenkipper mit Gebläse frei Silo +5 €/t. Lagerverarbeitung ergänzt 10 €/t Umschlag und ca. 18 €/t MMX. Aktivieren der Lagerverarbeitung wählt die Lagerroute; Direktlieferung deaktiviert sie.
+
+Prüfbeispiel: Rapsschrot Hamburg, 03.11.2026–31.07.2027, alle 28 Tage je 25 t: zehn Abrufe, 250 t gesamt, letzter Abruf 13.07.2027, Einkauf 296,50 €/t. Grundangebot mit Fracht 30 und Spanne 4: 33,05 €/dt netto. Gleiche 250 t als Gesamtmenge ergeben ebenfalls zehn Lieferungen zu 25 t. Ein Tagesmittel über denselben Zeitraum bleibt ein anderer, ausdrücklich benannter Rechenmodus.
