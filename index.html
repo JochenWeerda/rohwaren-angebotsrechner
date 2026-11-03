@@ -153,4 +153,5 @@ async function improvedRecognition(){
  finally{b.disabled=false;b.textContent='Preise aus Foto / PDF erkennen';}
 }
 const oldButton=$('readPrices'),newButton=oldButton.cloneNode(true);oldButton.replaceWith(newButton);newButton.addEventListener('click',improvedRecognition);
+$('photo').addEventListener('change',()=>{extractedPriceRows=[];$('pricePickerBlock').classList.add('hidden');$('purchase').value='';update();if($('photo').files?.[0])improvedRecognition();});
 </script></body></html>
