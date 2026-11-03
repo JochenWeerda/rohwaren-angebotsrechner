@@ -1,13 +1,20 @@
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('node:http'),path=require('node:path');
+async function chooseProduct(page,value){const product=value.replace(/Rapsschrott/i,'Rapsschrot'),port=await page.locator('#port').inputValue();if(!await page.locator('#productMenuDetails').evaluate(el=>el.open))await page.locator('#productSummary').click();await page.locator('#productSearch').fill(product);let choices=page.locator('.productChoice').filter({hasText:product});let preferred=choices.filter({hasText:port});if(await preferred.count())choices=preferred;await choices.first().click();}
 const root=path.resolve(__dirname,'..'),fixture=process.env.PRICE_FIXTURE;
 if(!fixture)throw Error('Set PRICE_FIXTURE to the original 02.11.2026 PDF');
 (async()=>{const server=http.createServer((req,res)=>{const file=path.join(root,req.url==='/'?'index.html':req.url.split('?')[0]);fs.readFile(file,(e,data)=>{res.statusCode=e?404:200;res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.png')?'image/png':'text/html');res.end(e?'Missing':data);});}).listen(0,'127.0.0.1');await new Promise(r=>server.on('listening',r));
 const url=process.env.TEST_URL||`http://127.0.0.1:${server.address().port}`;const browser=await chromium.launch({channel:'chrome',headless:false});const results=[];
 try{for(const width of [1440,390,375,320]){const context=await browser.newContext({viewport:{width,height:900},permissions:['clipboard-read','clipboard-write']});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});await page.goto(url);
-const fill=async(id,value)=>page.locator('#'+id).fill(String(value));const eq=async(id,value)=>assert.equal(await page.locator('#'+id).inputValue(),id==='purchase'&&value!==''?Number(value).toFixed(2):String(value));const offer=async(value)=>assert.equal(await page.locator('#offer').innerText(),value+' €');
+const fill=async(id,value)=>id==='product'?chooseProduct(page,String(value)):page.locator('#'+id).fill(String(value));const eq=async(id,value)=>assert.equal(await page.locator('#'+id).inputValue(),id==='purchase'&&value!==''?Number(value).toFixed(2):String(value));const offer=async(value)=>assert.equal(await page.locator('#offer').innerText(),value+' €');
 assert(await page.locator('#copy').isDisabled());assert.equal(await page.locator('#offer').innerText(),'–');
 await page.locator('#photo').setInputFiles(fixture);await page.waitForFunction(()=>!document.querySelector('#readPrices').disabled,{timeout:120000});assert.match(await page.locator('#ocrState').innerText(),/144 Preispositionen/);
+// Menu defaults, full NON GMO labels and expanded source-line selection.
+assert((await page.locator('.productChoice').evaluateAll(items=>items.map(x=>x.dataset.location))).every(x=>/\b(?:Brake|Hamburg)\b/i.test(x)));
+assert.equal(await page.locator('#port option[value="Andere"]').getAttribute('hidden'),'');
+await chooseProduct(page,'Soja NON GMO 46 % Protein');await fill('period','12');await eq('purchase',679);assert.match(await page.locator('#productSummary').innerText(),/Soja NON GMO 46 % Protein/);assert.equal(await page.locator('#productSummary').evaluate(el=>getComputedStyle(el).whiteSpace),'normal');
+await page.locator('#expandedProducts').click();assert.equal(await page.locator('#expandedProducts').getAttribute('aria-pressed'),'true');await chooseProduct(page,'Soja NON GMO 44 % ProFett');await fill('period','1-4/27');await eq('purchase',603);await eq('port','Andere');assert.match(await page.locator('#productFullName').innerText(),/Soja NON GMO 44 % ProFett.*Straubing/);
+await page.locator('#expandedProducts').click();await eq('product','');await eq('purchase','');await eq('port','Brake');assert(await page.locator('#copy').isDisabled());
 await fill('product','Rapsschrott');await page.locator('#port').selectOption('Hamburg');await fill('period','November 2026');await eq('purchase',315);await eq('freight',30);await offer('34,90');
 await fill('period','Dezember 2026');await eq('purchase',305);await offer('33,90');
 await page.locator('#port').selectOption('Brake');await eq('purchase',314);await eq('freight',15);await offer('33,30');

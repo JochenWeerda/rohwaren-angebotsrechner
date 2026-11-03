@@ -60,3 +60,8 @@ Die Menge kann je Lieferung oder als Gesamtmenge angegeben werden. Bei Gesamtmen
 Volle 25 t je Abruf: Fracht Brake 15 €/t oder Hamburg 30 €/t, direkt zum Kunden oder zum Lager Folkerts Landhandel, Groothusen. Standardspanne 4 €/t (individuell 3–5 möglich); Teilmengen erhalten 10 €/t Standardspanne. Manuell gewählte Spannen bleiben individuell. Schubboden +4 €/t; Muldenkipper mit Gebläse frei Silo +5 €/t. Lagerverarbeitung ergänzt 10 €/t Umschlag und ca. 18 €/t MMX. Aktivieren der Lagerverarbeitung wählt die Lagerroute; Direktlieferung deaktiviert sie.
 
 Prüfbeispiel: Rapsschrot Hamburg, 03.11.2026–31.07.2027, alle 28 Tage je 25 t: zehn Abrufe, 250 t gesamt, letzter Abruf 13.07.2027, Einkauf 296,50 €/t. Grundangebot mit Fracht 30 und Spanne 4: 33,05 €/dt netto. Gleiche 250 t als Gesamtmenge ergeben ebenfalls zehn Lieferungen zu 25 t. Ein Tagesmittel über denselben Zeitraum bleibt ein anderer, ausdrücklich benannter Rechenmodus.
+
+
+## Rohwarenmenü
+
+Erkannte Rohware/Herkunft wird als vollständige, umbrochene Schaltfläche im Menü angeboten. Standardmäßig sind nur Positionen mit Brake oder Hamburg in der Herkunft zugelassen. „Erweiterte Auswahl“ öffnet alle erkannten Positionen und die Hafenoption Andere. Die Auswahl setzt Rohware und genaue Herkunft gemeinsam; die Preisfilter verwenden exakte Produktzuordnung. Beim Zurückschalten wird eine nicht mehr zugelassene Auswahl einschließlich Einkauf gelöscht. NON GMO und Proteingehalte werden ausschließlich aus dem erkannten Originalnamen übernommen und vollständig angezeigt. Ein separater manueller Fallback bleibt für nicht erkannte Zeilen verfügbar.
